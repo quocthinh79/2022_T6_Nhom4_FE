@@ -1,0 +1,20 @@
+@import "normalize.css";
+
+:root {
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+  position: relative;
+  background-color: #efefef;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
