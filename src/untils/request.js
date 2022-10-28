@@ -15,7 +15,22 @@ export const requestWeatherFromMySql = axios.create({
   baseURL: "http://localhost:9999",
 });
 
-export const getWeatherFromMySql = async (path = '/', option = {}) => {
+export const importDataFromCsvFile = async (fileName ,path = '/weather/import-data', option = {}) => {
+  const response = await requestWeatherFromMySql.get(path = `/weather/import-data/${fileName}`, option);
+  return response;
+};
+
+export const handleStaging = async (path = '/weather/handle-staging', option = {}) => {
   const response = await requestWeatherFromMySql.get(path, option);
+  return response;
+};
+
+export const handleWarehouse = async (path = '/weather/handle-data-warehouse', option = {}) => {
+  const response = await requestWeatherFromMySql.get(path, option);
+  return response;
+};
+
+export const handleWriteLog = async (fileName, logDate, actionLog, status,path = '/filelog/handle-write-log', option = {}) => {
+  const response = await requestWeatherFromMySql.get(path = `/filelog/handle-write-log/${fileName}/${logDate}/${actionLog}/${status}`, option);
   return response;
 };
