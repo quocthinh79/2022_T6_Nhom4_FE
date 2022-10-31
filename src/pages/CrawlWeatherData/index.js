@@ -55,7 +55,12 @@ function CrawlWeatherData() {
       const res = await request.getWeather(href);
       return res;
     } catch (error) {
-      writeLog(`ThoiTietVN_${getToday()}`, getToday(), "Crawl data to CSV file", "ERROR");
+      writeLog(
+        `ThoiTietVN_${getToday()}`,
+        getToday(),
+        "Crawl data to CSV file",
+        "ERROR"
+      );
     }
   };
 
@@ -91,6 +96,7 @@ function CrawlWeatherData() {
   const [data, setData] = useState([]);
   const [showDown, setShowDown] = useState(false);
   const [getCity, setGetCity] = useState(null);
+  const [updateTime, setUpdateTime] = useState(null)
   const getHref = async () => {
     const result = await weatherDataFeed2();
     const cheerio = require("cheerio");
@@ -123,6 +129,7 @@ function CrawlWeatherData() {
         .replace("Chất lượng không khí: ", "");
       pushAttributeToObjectInArray("ChatLuongKhongKhi", air);
       const updateTime = $("#timer").text().trim();
+      setUpdateTime(updateTime)
       pushAttributeToObjectInArray(
         "NgayCapNhat",
         updateTime.slice(updateTime.indexOf(" | ") + 3, updateTime.length)
@@ -154,7 +161,7 @@ function CrawlWeatherData() {
           `.weather-feature .carousel-item.col-md-3:nth-child(${i}) .card-city-title`
         )
           .text()
-          .trim();
+          .trim().split(' ')[2];
         const luongMuaNgayToi = $(
           `.weather-feature .carousel-item.col-md-3:nth-child(${i}) .precipitation`
         )
@@ -176,7 +183,7 @@ function CrawlWeatherData() {
           case 2:
             pushAttributeToObjectInArray(
               "NgayMai",
-              `${parseInt(day) + 1}/${month}/${year}`
+              `${parseInt(ngayToi)}/${month}/${year}`
             );
             pushAttributeToObjectInArray("LuongMuaNgayMai", luongMuaNgayToi);
             pushAttributeToObjectInArray("ThoiTietNgayMai", moTaNgayToi);
@@ -188,7 +195,7 @@ function CrawlWeatherData() {
           case 3:
             pushAttributeToObjectInArray(
               "NgayMot",
-              `${parseInt(day) + 2}/${month}/${year}`
+              `${parseInt(ngayToi)}/${month}/${year}`
             );
             pushAttributeToObjectInArray("LuongMuaNgayMot", luongMuaNgayToi);
             pushAttributeToObjectInArray("ThoiTietNgayMot", moTaNgayToi);
@@ -200,7 +207,7 @@ function CrawlWeatherData() {
           case 4:
             pushAttributeToObjectInArray(
               "BaNgayToi",
-              `${parseInt(day) + 3}/${month}/${year}`
+              `${parseInt(ngayToi)}/${month}/${year}`
             );
             pushAttributeToObjectInArray("LuongMuaBaNgayToi", luongMuaNgayToi);
             pushAttributeToObjectInArray("ThoiTietBaNgayToi", moTaNgayToi);
@@ -212,7 +219,7 @@ function CrawlWeatherData() {
           case 5:
             pushAttributeToObjectInArray(
               "BonNgayToi",
-              `${parseInt(day) + 4}/${month}/${year}`
+              `${parseInt(ngayToi)}/${month}/${year}`
             );
             pushAttributeToObjectInArray("LuongMuaBonNgayToi", luongMuaNgayToi);
             pushAttributeToObjectInArray("ThoiTietBonNgayToi", moTaNgayToi);
@@ -224,7 +231,7 @@ function CrawlWeatherData() {
           case 6:
             pushAttributeToObjectInArray(
               "NamNgayToi",
-              `${parseInt(day) + 5}/${month}/${year}`
+              `${parseInt(ngayToi)}/${month}/${year}`
             );
             pushAttributeToObjectInArray("LuongMuaNamNgayToi", luongMuaNgayToi);
             pushAttributeToObjectInArray("ThoiTietNamNgayToi", moTaNgayToi);
@@ -236,7 +243,7 @@ function CrawlWeatherData() {
           case 7:
             pushAttributeToObjectInArray(
               "SauNgayToi",
-              `${parseInt(day) + 6}/${month}/${year}`
+              `${parseInt(ngayToi) }/${month}/${year}`
             );
             pushAttributeToObjectInArray("LuongMuaSauNgayToi", luongMuaNgayToi);
             pushAttributeToObjectInArray("ThoiTietSauNgayToi", moTaNgayToi);
@@ -248,7 +255,7 @@ function CrawlWeatherData() {
           case 8:
             pushAttributeToObjectInArray(
               "BayNgayToi",
-              `${parseInt(day) + 7}/${month}/${year}`
+              `${parseInt(ngayToi)}/${month}/${year}`
             );
             pushAttributeToObjectInArray("LuongMuaBayNgayToi", luongMuaNgayToi);
             pushAttributeToObjectInArray("ThoiTietBayNgayToi", moTaNgayToi);
@@ -295,7 +302,12 @@ function CrawlWeatherData() {
     XLSX.writeFile(wb, `ThoiTietVN_${getToday()}.csv`);
     setDownload(true);
     console.log("Download");
-    writeLog(`ThoiTietVN_${getToday()}`, getToday(), "Crawl data to CSV file", "ER");
+    writeLog(
+      `ThoiTietVN_${getToday()}`,
+      getToday(),
+      "Crawl data to CSV file",
+      "ER"
+    );
   };
 
   useEffect(() => {
@@ -317,6 +329,9 @@ function CrawlWeatherData() {
           })
           .catch(function (res) {});
         setDownload(false);
+        setTimeout(() => {
+          res()
+        }, 5000)
       }
     };
     getData();
