@@ -96,7 +96,7 @@ function CrawlWeatherData() {
   const [data, setData] = useState([]);
   const [showDown, setShowDown] = useState(false);
   const [getCity, setGetCity] = useState(null);
-  const [updateTime, setUpdateTime] = useState(null)
+  const [updateTime, setUpdateTime] = useState(null);
   const getHref = async () => {
     const result = await weatherDataFeed2();
     const cheerio = require("cheerio");
@@ -129,7 +129,7 @@ function CrawlWeatherData() {
         .replace("Chất lượng không khí: ", "");
       pushAttributeToObjectInArray("ChatLuongKhongKhi", air);
       const updateTime = $("#timer").text().trim();
-      setUpdateTime(updateTime)
+      setUpdateTime(updateTime);
       pushAttributeToObjectInArray(
         "NgayCapNhat",
         updateTime.slice(updateTime.indexOf(" | ") + 3, updateTime.length)
@@ -161,7 +161,8 @@ function CrawlWeatherData() {
           `.weather-feature .carousel-item.col-md-3:nth-child(${i}) .card-city-title`
         )
           .text()
-          .trim().split(' ')[2];
+          .trim()
+          .split(" ")[2];
         const luongMuaNgayToi = $(
           `.weather-feature .carousel-item.col-md-3:nth-child(${i}) .precipitation`
         )
@@ -243,7 +244,7 @@ function CrawlWeatherData() {
           case 7:
             pushAttributeToObjectInArray(
               "SauNgayToi",
-              `${parseInt(ngayToi) }/${month}/${year}`
+              `${parseInt(ngayToi)}/${month}/${year}`
             );
             pushAttributeToObjectInArray("LuongMuaSauNgayToi", luongMuaNgayToi);
             pushAttributeToObjectInArray("ThoiTietSauNgayToi", moTaNgayToi);
@@ -313,7 +314,6 @@ function CrawlWeatherData() {
   useEffect(() => {
     if (showDown) {
       handleExport();
-      setShowDown(false);
     }
   }, [showDown]);
 
@@ -321,17 +321,18 @@ function CrawlWeatherData() {
 
   useEffect(() => {
     const getData = async () => {
-      if (download) {
+      if (showDown) {
         const res = await request
           .importDataFromCsvFile(fileNameCsv)
           .then(function (res) {
             setImportFile(true);
+            setShowDown(false);
           })
           .catch(function (res) {});
         setDownload(false);
         setTimeout(() => {
-          res()
-        }, 5000)
+          res();
+        }, 5000);
       }
     };
     getData();
