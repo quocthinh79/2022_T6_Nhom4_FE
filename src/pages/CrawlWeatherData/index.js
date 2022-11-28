@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import * as request from "~/untils/request";
+import SelectBoxComponent from "./component/SelectBoxComponent";
+import "./style.css";
 
 function CrawlWeatherData() {
   const dataSheet = [];
@@ -272,6 +274,8 @@ function CrawlWeatherData() {
       count < 63 ? setLoading(true) : setLoading(false);
       if (count === 63) {
         setShowDown(true);
+      } else {
+        setShowDown(false);
       }
     });
   };
@@ -355,23 +359,250 @@ function CrawlWeatherData() {
   useEffect(() => {
     const getData = async () => {
       if (initStaging) {
-        const res = await request.handleWarehouse().then(function (res) {});
+        const res = await request.handleWarehouse().then(function (res) {
+          // setShowDown(true);
+        });
         setInitStaging(false);
       }
     };
     getData();
   }, [initStaging]);
 
+  const [thoiTietHienTai, setThoiTietHienTai] = useState([]);
+  const [thoiTietNgayMai, setThoiTietNgayMai] = useState([]);
+  const [thoiTietNgayMot, setThoiTietNgayMot] = useState([]);
+  const [thoiTietBaNgayToi, setThoiTietBaNgayToi] = useState([]);
+  const [thoiTietBonNgayToi, setThoiTietBonNgayToi] = useState([]);
+  const [thoiTietNamNgayToi, setThoiTietNamNgayToi] = useState([]);
+  const [thoiTietSauNgayToi, setThoiTietSauNgayToi] = useState([]);
+  const [thoiTietBayNgayToi, setThoiTietBayNgayToi] = useState([]);
+
+  const showDataFromDB = (cityId) => {
+    const getData = async () => {
+      await request.thoiTietHienTai(cityId).then(function (res) {
+        setThoiTietHienTai(res);
+      });
+      await request.thoiTietNgayMai(cityId).then(function (res) {
+        setThoiTietNgayMai(res);
+      });
+      await request.thoiTietNgayMot(cityId).then(function (res) {
+        setThoiTietNgayMot(res);
+      });
+      await request.thoiTietBaNgayToi(cityId).then(function (res) {
+        setThoiTietBaNgayToi(res);
+      });
+      await request.thoiTietBonNgayToi(cityId).then(function (res) {
+        setThoiTietBonNgayToi(res);
+      });
+      await request.thoiTietNamNgayToi(cityId).then(function (res) {
+        setThoiTietNamNgayToi(res);
+      });
+      await request.thoiTietSauNgayToi(cityId).then(function (res) {
+        setThoiTietSauNgayToi(res);
+      });
+      await request.thoiTietBayNgayToi(cityId).then(function (res) {
+        setThoiTietBayNgayToi(res);
+      });
+    };
+    getData();
+  };
+
+  // setTimeout(() => {
+  //   getHref();
+  // }, 5000);
+
   return (
-    <>
+    <div className="container-fluid">
       <button onClick={getHref}>Get new data</button>
-      {/* {
-        <button ref={btnRef} onClick={handleExport}>
-          Download excel
-        </button>
-      } */}
       {loading && <h1>Loading data</h1>}
-    </>
+      <div class=" px-1 px-sm-3 py-5 mx-auto">
+        <SelectBoxComponent showDataFromDB={showDataFromDB} />
+        <div class="row d-flex justify-content-center">
+          <div class="row card0">
+            <div class="card1 col-lg-8 col-md-7">
+              {/* <small>the.weather</small> */}
+              <div class="text-center">
+                <img class="image mt-5" src="https://i.imgur.com/M8VyA2h.png" />
+              </div>
+              <div class="row px-3 mt-3 mb-3">
+                <h1 class="large-font mr-3">
+                  {thoiTietHienTai[0]?.temperature}
+                </h1>
+                <div class="d-flex flex-column mr-3">
+                  <h2 class="mt-3 mb-0">{thoiTietHienTai[0]?.city_name}</h2>
+                  <small>{thoiTietHienTai[0]?.full_date}</small>
+                </div>
+              </div>
+            </div>
+            <div class="card2 col-lg-4 col-md-5">
+              <div class="mr-5">
+                <div class="line my-5"></div>
+                <p>Chi tiết</p>
+                <div class="row px-3">
+                  <p class="light-text">Gió</p>
+                  <p class="ml-auto">{thoiTietHienTai[0]?.wind_speed}</p>
+                </div>
+                <div class="row px-3">
+                  <p class="light-text">Mô tả</p>
+                  <p class="ml-auto">{thoiTietHienTai[0]?.describe}</p>
+                </div>
+                <div class="row px-3">
+                  <p class="light-text">Tầm nhìn</p>
+                  <p class="ml-auto">{thoiTietHienTai[0]?.vision}</p>
+                </div>
+                <div class="row px-3">
+                  <p class="light-text">Độ ẩm hiện tại</p>
+                  <p class="ml-auto">{thoiTietHienTai[0]?.percent}</p>
+                </div>
+                <div class="row px-3">
+                  <p class="light-text">Chất lượng không khí</p>
+                  <p class="ml-auto">{thoiTietHienTai[0]?.quality}</p>
+                </div>
+                <div class="line mt-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container d-flex ">
+        <div class="card">
+          <span class="icon"></span>
+          <div class="title">
+            <p>{thoiTietNgayMai[0]?.full_date}</p>
+          </div>
+          <div class="temp">{thoiTietNgayMai[0]?.NhietDoNgayMai}</div>
+          <div class="row">
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietNgayMai[0] && <div class="header">Thời tiết</div>}
+              <div class="value">{thoiTietNgayMai[0]?.describe}</div>
+            </div>
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietNgayMai[0] && <div class="header">Lượng mưa</div>}
+              <div class="value">{thoiTietNgayMai[0]?.percent}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="icon"></span>
+          <div class="title">
+            <p>{thoiTietNgayMot[0]?.full_date}</p>
+          </div>
+          <div class="temp">{thoiTietNgayMot[0]?.NhietDoNgayMot}</div>
+          <div class="row">
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietNgayMot[0] && <div class="header">Thời tiết</div>}
+              <div class="value">{thoiTietNgayMot[0]?.describe}</div>
+            </div>
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietNgayMot[0] && <div class="header">Lượng mưa</div>}
+              <div class="value">{thoiTietNgayMot[0]?.percent}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="icon"></span>
+          <div class="title">
+            <p>{thoiTietBaNgayToi[0]?.full_date}</p>
+          </div>
+          <div class="temp">{thoiTietBaNgayToi[0]?.NhietDoBaNgayToi}</div>
+          <div class="row">
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietBaNgayToi[0] && <div class="header">Thời tiết</div>}
+              <div class="value">{thoiTietBaNgayToi[0]?.describe}</div>
+            </div>
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietBaNgayToi[0] && <div class="header">Lượng mưa</div>}
+              <div class="value">{thoiTietBaNgayToi[0]?.percent}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="icon"></span>
+          <div class="title">
+            <p>{thoiTietBonNgayToi[0]?.full_date}</p>
+          </div>
+          <div class="temp">{thoiTietBonNgayToi[0]?.NhietDoBonNgayToi}</div>
+          <div class="row">
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietBonNgayToi[0] && <div class="header">Thời tiết</div>}
+              <div class="value">{thoiTietBonNgayToi[0]?.describe}</div>
+            </div>
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietBonNgayToi[0] && <div class="header">Lượng mưa</div>}
+              <div class="value">{thoiTietBonNgayToi[0]?.percent}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="icon"></span>
+          <div class="title">
+            <p>{thoiTietNamNgayToi[0]?.full_date}</p>
+          </div>
+          <div class="temp">{thoiTietNamNgayToi[0]?.NhietDoNamNgayToi}</div>
+          <div class="row">
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietNamNgayToi[0] && <div class="header">Thời tiết</div>}
+              <div class="value">{thoiTietNamNgayToi[0]?.describe}</div>
+            </div>
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietNamNgayToi[0] && <div class="header">Lượng mưa</div>}
+              <div class="value">{thoiTietNamNgayToi[0]?.percent}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="icon"></span>
+          <div class="title">
+            <p>{thoiTietNamNgayToi[0]?.full_date}</p>
+          </div>
+          <div class="temp">{thoiTietNamNgayToi[0]?.NhietDoNamNgayToi}</div>
+          <div class="row">
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietNamNgayToi[0] && <div class="header">Thời tiết</div>}
+              <div class="value">{thoiTietNamNgayToi[0]?.describe}</div>
+            </div>
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietNamNgayToi[0] && <div class="header">Lượng mưa</div>}
+              <div class="value">{thoiTietNamNgayToi[0]?.percent}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="icon"></span>
+          <div class="title">
+            <p>{thoiTietSauNgayToi[0]?.full_date}</p>
+          </div>
+          <div class="temp">{thoiTietSauNgayToi[0]?.NhietDoSauNgayToi}</div>
+          <div class="row">
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietSauNgayToi[0] && <div class="header">Thời tiết</div>}
+              <div class="value">{thoiTietSauNgayToi[0]?.describe}</div>
+            </div>
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietSauNgayToi[0] && <div class="header">Lượng mưa</div>}
+              <div class="value">{thoiTietSauNgayToi[0]?.percent}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="icon"></span>
+          <div class="title">
+            <p>{thoiTietBayNgayToi[0]?.full_date}</p>
+          </div>
+          <div class="temp">{thoiTietBayNgayToi[0]?.NhietDoBayNgayToi}</div>
+          <div class="row">
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietBayNgayToi[0] && <div class="header">Thời tiết</div>}
+              <div class="value">{thoiTietBayNgayToi[0]?.describe}</div>
+            </div>
+            <div class="col-6 px-1" style={{ width: `100px` }}>
+              {thoiTietBayNgayToi[0] && <div class="header">Lượng mưa</div>}
+              <div class="value">{thoiTietBayNgayToi[0]?.percent}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
