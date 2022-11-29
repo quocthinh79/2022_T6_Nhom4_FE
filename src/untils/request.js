@@ -79,3 +79,8 @@ export const thoiTietBayNgayToi = async (cityId,path = '/weather/thoi-tiet-bay-n
   const response = await requestWeatherFromMySql.get(path = `/weather/thoi-tiet-bay-ngay-toi/${cityId}`, option);
   return response.data[0];
 };
+
+export const thoiTiet = async (cityId,path = '/weather/thoi-tiet', option = {}) => {
+  const response = await requestWeatherFromMySql.get(path = `/weather/thoi-tiet/${cityId}`, option);
+  return response.data[0];
+};

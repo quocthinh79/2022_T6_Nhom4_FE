@@ -18,6 +18,7 @@ function SelectBoxComponent({ showDataFromDB }) {
   function handleSelectChange(event) {
     setSelectedClient(event.target.value);
     showDataFromDB(event.target.value);
+    console.log(event.target.value)
   }
 
   return (

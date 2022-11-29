@@ -403,6 +403,9 @@ function CrawlWeatherData() {
       await request.thoiTietBayNgayToi(cityId).then(function (res) {
         setThoiTietBayNgayToi(res);
       });
+      await request.thoiTiet(cityId).then(function (res) {
+        console.log(res);
+      });
     };
     getData();
   };
