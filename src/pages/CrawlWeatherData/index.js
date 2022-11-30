@@ -356,11 +356,15 @@ function CrawlWeatherData() {
     getData();
   }, [importFile]);
 
+  const [done, setDone] = useState(false);
+
   useEffect(() => {
     const getData = async () => {
       if (initStaging) {
         const res = await request.handleWarehouse().then(function (res) {
-          // setShowDown(true);
+          request.deleteFile(fileNameCsv).then(function (res) {
+            setDone(true);
+          });
         });
         setInitStaging(false);
       }
@@ -403,23 +407,32 @@ function CrawlWeatherData() {
       await request.thoiTietBayNgayToi(cityId).then(function (res) {
         setThoiTietBayNgayToi(res);
       });
-      await request.thoiTiet(cityId).then(function (res) {
-        console.log(res);
-      });
     };
     getData();
   };
 
-  // setTimeout(() => {
-  //   getHref();
-  // }, 5000);
+  const [cityId, setCityId] = useState(-1);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (done) {
+        showDataFromDB(cityId);
+        setDone(false);
+      } else {
+        getHref();
+      }
+    }, 60000 * 5);
+  }, [done]);
 
   return (
     <div className="container-fluid">
-      <button onClick={getHref}>Get new data</button>
-      {loading && <h1>Loading data</h1>}
+      {/* <button onClick={getHref}>Get new data</button>
+      {loading && <h1>Loading data</h1>} */}
       <div class=" px-1 px-sm-3 py-5 mx-auto">
-        <SelectBoxComponent showDataFromDB={showDataFromDB} />
+        <SelectBoxComponent
+          showDataFromDB={showDataFromDB}
+          setCityId={setCityId}
+        />
         <div class="row d-flex justify-content-center">
           <div class="row card0">
             <div class="card1 col-lg-8 col-md-7">

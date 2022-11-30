@@ -80,7 +80,7 @@ export const thoiTietBayNgayToi = async (cityId,path = '/weather/thoi-tiet-bay-n
   return response.data[0];
 };
 
-export const thoiTiet = async (cityId,path = '/weather/thoi-tiet', option = {}) => {
-  const response = await requestWeatherFromMySql.get(path = `/weather/thoi-tiet/${cityId}`, option);
-  return response.data[0];
+export const deleteFile = async (linkFile,path = '/delete-file', option = {}) => {
+  const response = await requestWeatherFromMySql.get(path = `/delete-file/${linkFile}`, option);
+  return response.data;
 };

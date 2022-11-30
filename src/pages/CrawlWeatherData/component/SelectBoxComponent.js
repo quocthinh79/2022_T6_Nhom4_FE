@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import * as request from "~/untils/request";
-import './style.css'
-// import "bootstrap/dist/css/bootstrap.css";
-// import "bootstrap/dist/js/bootstrap.js";
+import "./style.css";
 
-function SelectBoxComponent({ showDataFromDB }) {
+function SelectBoxComponent({ showDataFromDB, setCityId }) {
   const [city, setCity] = useState([]);
   const getCity = async () => {
     const res = await request.getCity().then(function (res) {
@@ -18,7 +16,8 @@ function SelectBoxComponent({ showDataFromDB }) {
   function handleSelectChange(event) {
     setSelectedClient(event.target.value);
     showDataFromDB(event.target.value);
-    console.log(event.target.value)
+    setCityId(event.target.value);
+    console.log(event.target.value);
   }
 
   return (
@@ -29,7 +28,9 @@ function SelectBoxComponent({ showDataFromDB }) {
         class="form-select"
         aria-label="Default select example"
       >
-        <option selected>Open this select menu</option>
+        <option value={-1} selected>
+          Open this select menu
+        </option>
         {city.map((item, index) => (
           <option value={`${item.TinhThanhPho}`}>{item.city_name}</option>
         ))}
