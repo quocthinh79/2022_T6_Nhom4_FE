@@ -325,7 +325,7 @@ function CrawlWeatherData() {
 
   useEffect(() => {
     const getData = async () => {
-      if (showDown) {
+      if (download) {
         const res = await request
           .importDataFromCsvFile(fileNameCsv)
           .then(function (res) {
